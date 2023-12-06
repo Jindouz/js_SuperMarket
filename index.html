@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <title>SuperMarket</title>
+</head>
+
+<body class="bg-body-tertiary">
+
+
+    <div>
+        <button class="btn btn-danger btn-sm" id="button1" onclick="moveDiagonally()"
+            style="top: -200px;left: 50px; position: absolute;">&nbsp;&nbsp;</button>
+        <button class="btn btn-warning btn-sm" id="button2" onclick="moveDiagonally()"
+            style="top: -200px;left: 50px; position: absolute;">&nbsp;&nbsp;</button>
+        <button class="btn btn-primary btn-sm" id="button3" onclick="moveDiagonally()"
+            style="top: -200px;left: 50px; position: absolute;">&nbsp;&nbsp;</button>
+
+    </div>
+
+    <div class="container">
+        <header class="py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="h1">SuperMarket Manager (Axios)</h1>
+                </div>
+                <div class="button-container col-12 text-center">
+                    <label class="form-label">json-server --watch products.json</label>
+                </div>
+                <br>
+                <div style="text-align: center; font-size: 50px">
+                    <div style="display: inline-block; margin: -5px;" id="displayH"></div>
+                    <div style="display: inline-block; margin: -5px;" id="displayM"></div>
+                    <div style="display: inline-block; margin: -5px;" id="displayS"></div>
+                    <div id="alertHour" style="display: inline-block; margin: -3px; font-size: 35px"></div>
+                </div>
+
+            </div>
+        </header>
+        <hr class="featurette-divider">
+        <div class="col-12 text-center">
+            <button class="btn btn-outline-danger btn-sm" onclick="movingStart()">Buttons Party</button>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group col-md-8">
+                    <label class="form-label">Name:</label> <input id="itemName" type="text" class="form-control"
+                        placeholder="Name">
+                    <label class="form-label">Category:</label> <input id="itemCategory" type="text"
+                        class="form-control" placeholder="Category">
+                    <label class="form-label">Price:</label> <input id="itemPrice" type="text" class="form-control"
+                        placeholder="Price ₪">
+                    <label class="form-label">Quantity:</label> <input id="itemQuantity" type="text"
+                        class="form-control" placeholder="Quantity #">
+                </div>
+                <br>
+                <button id="addBtn" type="button" class="btn btn btn-warning btn-sm" onclick="add()">Add</button>
+                <button id="getBtn" type="button" class="btn btn btn-warning btn-sm" onclick="read()">Display</button>
+                <br><br>
+            </div>
+
+            <div class="col-sm-8">
+                <div style="background-color: rgb(32, 32, 32); border: 2px solid rgb(124, 128, 128); border-radius: 10px; padding: 20px;">
+                    <div id="msg" style="color: red; font-weight: bold"></div>
+
+                    <div id="result"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <script>
+        const myServer = "http://localhost:3000/products"
+        let products = []
+
+
+        // reads the products list from the server
+        const read = async () => {
+            products = await axios.get(myServer)
+            products = products.data
+            console.table(products);
+            buildDisplay()
+        }
+
+        // adds a new product
+        const add = () => {
+            if (parseFloat(itemPrice.value) && parseFloat(itemQuantity.value)) {
+                axios.post(myServer, {
+                    name: itemName.value,
+                    category: itemCategory.value,
+                    price: parseFloat(itemPrice.value),
+                    quantity: parseFloat(itemQuantity.value)
+
+                })
+                read()
+            } else {
+                msg.innerHTML = "Please enter valid Price and Quantity."
+            }
+        }
+
+        // displays the products to innerHTML
+        const buildDisplay = async () => {
+            result.innerHTML = products.reverse().map(product => `
+             <div>
+                ID: ${product.id} - 
+                Name: ${product.name} -  
+                Category: ${product.category} - 
+                Price: ${product.price} ₪ - 
+                Quantity: ${product.quantity}
+                <button class="btn btn btn-outline-danger btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" onclick="deleteProduct(${product.id})">Delete</button>
+                <button class="btn btn btn-outline-primary btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" onclick="updateProduct(${product.id})">Update</button>
+                <hr class="featurette-divider">
+                </div>`).join("")
+        }
+
+        // deletes the product
+        const deleteProduct = (id) => axios.delete(`${myServer}/${id}`)
+
+        // updates the product
+        const updateProduct = (id) => {
+            if (parseFloat(itemPrice.value) && parseFloat(itemQuantity.value)) {
+                axios.put(`${myServer}/${id}`, {
+                    name: itemName.value,
+                    category: itemCategory.value,
+                    price: parseFloat(itemPrice.value),
+                    quantity: parseFloat(itemQuantity.value)
+
+                })
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+                read()
+            } else {
+                msg.innerHTML = "Please enter valid Price and Quantity."
+            }
+        }
+
+        read()
+
+        // clock
+        const showTime = () => {
+            let date = new Date();
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let seconds = date.getSeconds();
+            let timeOfDay = 0;
+
+            displayH.style.color = `rgb(${hours * 100 % 255},${hours * 20 % 255},${hours * 5 % 255})`
+            displayM.style.color = `rgb(${minutes * 100 % 255},${minutes * 20 % 255},${minutes * 5 % 255})`
+            displayS.style.color = `rgb(${seconds * 100 % 255},${seconds * 20 % 255},${seconds * 5 % 255})`
+
+            displayH.innerHTML = hours + ":"
+            displayM.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":"
+            displayS.innerHTML = (seconds < 10 ? "0" + seconds : seconds)
+
+            if (hours >= 6 && hours < 12) {
+                // Morning 6:00 - 12:00
+                alertHour.style.color = `rgb(255,204,0)`;
+                alertHour.innerHTML = 'AM <img src="assets/media/sunrise.svg" style="width: 40px;">';
+                timeOfDay = 'morning';
+            } else if (hours >= 12 && hours < 18) {
+                // Afternoon 12:00 - 18:00
+                alertHour.style.color = `rgb(255,153,0)`;
+                alertHour.innerHTML = 'PM <img src="assets/media/noon.svg" style="width: 40px;">';
+                timeOfDay = 'afternoon';
+            } else if (hours >= 18 && hours < 23) {
+                // Evening 18:00 - 23:00
+                alertHour.style.color = `rgb(153,0,102)`;
+                alertHour.innerHTML = 'PM <img src="assets/media/night.svg" style="width: 30px;">';
+                timeOfDay = 'evening';
+            } else {
+                // Night 00:00 - 6:00
+                alertHour.style.color = 'rgb(102, 0, 68)';
+                alertHour.innerHTML = 'AM <img src="assets/media/night.svg" style="width: 30px;">';
+                timeOfDay = 'night';
+            }
+
+            document.body.className = timeOfDay;
+
+            setTimeout(showTime, 1000);
+        }
+
+
+        showTime();
+
+        // forEach loop with odd numbers
+        ar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+        ar.forEach((i) => {
+            if (i % 2 !== 0) {
+                console.log(i);
+            }
+        })
+
+
+        // moving buttons
+        const movingButtons = (id, startingTop, startingLeft, speed) => {
+            let newTop = startingTop
+            let newLeft = startingLeft
+
+            let delta = speed
+            let delta2 = speed
+
+            const move = () => {
+
+                newTop += delta
+                newLeft += delta2
+
+                id.style.top = `${newTop}px`;
+                id.style.left = `${newLeft}px`;
+
+                if (newTop > window.screen.height || newTop < 0) {
+                    delta = -delta
+                }
+                if (newLeft > window.screen.width || newLeft < 0) {
+                    delta2 = -delta2
+                }
+            }
+
+            setInterval(move, 100);
+        }
+
+        // starts the moving buttons function with different parameters
+        const movingStart = () => {
+            const button1 = document.getElementById('button1');
+            const button2 = document.getElementById('button2');
+            const button3 = document.getElementById('button3');
+
+            movingButtons(button1, 200, 50, 40);
+            movingButtons(button2, 300, 150, 20);
+            movingButtons(button3, 100, 300, 30);
+        }
+
+
+    </script>
+
+</body>
+
+</html>

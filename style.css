@@ -1,0 +1,29 @@
+body.morning {
+    background: linear-gradient(45deg, #71818a, #0b23ac);
+    color: #ffffff;
+        transition: background 1.5s ease;
+    min-height: 100vh;
+    margin: 0;
+}
+body.afternoon {
+    background: linear-gradient(45deg, #56aada, #0b23ac);
+    color: #ffffff;
+    /* background: linear-gradient(45deg, #ffae34, #b31818); */
+        transition: background 1.5s ease;
+    min-height: 100vh;
+    margin: 0;
+}
+body.evening {
+    background: linear-gradient(45deg, #306483, #06125a);
+    color: #ffffff;
+        transition: background 1.5s ease;
+    min-height: 100vh;
+    margin: 0;
+}
+body.night {
+    background: linear-gradient(45deg, #1c455e, #01082e);
+    color: #ffffff;
+        transition: background 1.5s ease;
+    min-height: 100vh;
+    margin: 0;
+}
