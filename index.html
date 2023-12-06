@@ -45,7 +45,7 @@
         </header>
         <hr class="featurette-divider">
         <div class="col-12 text-center">
-            <button class="btn btn-outline-danger btn-sm" onclick="movingStart()">Buttons Party</button>
+            <button class="btn btn-danger btn-sm" onclick="movingStart()">Buttons Party</button>
         </div>
         <br>
         <div class="row">
@@ -174,12 +174,12 @@
                 alertHour.style.color = `rgb(255,204,0)`;
                 alertHour.innerHTML = 'AM <img src="assets/media/sunrise.svg" style="width: 40px;">';
                 timeOfDay = 'morning';
-            } else if (hours >= 12 && hours < 18) {
+            } else if (hours >= 12 && hours < 17) {
                 // Afternoon 12:00 - 18:00
                 alertHour.style.color = `rgb(255,153,0)`;
                 alertHour.innerHTML = 'PM <img src="assets/media/noon.svg" style="width: 40px;">';
                 timeOfDay = 'afternoon';
-            } else if (hours >= 18 && hours < 23) {
+            } else if (hours >= 17 && hours < 23) {
                 // Evening 18:00 - 23:00
                 alertHour.style.color = `rgb(153,0,102)`;
                 alertHour.innerHTML = 'PM <img src="assets/media/night.svg" style="width: 30px;">';
