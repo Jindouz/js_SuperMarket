@@ -67,7 +67,8 @@
             </div>
 
             <div class="col-sm-8">
-                <div style="background-color: rgb(32, 32, 32); border: 2px solid rgb(124, 128, 128); border-radius: 10px; padding: 20px;">
+                <div
+                    style="background-color: rgb(32, 32, 32); border: 2px solid rgb(124, 128, 128); border-radius: 10px; padding: 20px;">
                     <div id="msg" style="color: red; font-weight: bold"></div>
 
                     <div id="result"></div>
@@ -175,12 +176,12 @@
                 alertHour.innerHTML = 'AM <img src="assets/media/sunrise.svg" style="width: 40px;">';
                 timeOfDay = 'morning';
             } else if (hours >= 12 && hours < 17) {
-                // Afternoon 12:00 - 18:00
+                // Afternoon 12:00 - 17:00
                 alertHour.style.color = `rgb(255,153,0)`;
                 alertHour.innerHTML = 'PM <img src="assets/media/noon.svg" style="width: 40px;">';
                 timeOfDay = 'afternoon';
             } else if (hours >= 17 && hours < 23) {
-                // Evening 18:00 - 23:00
+                // Evening 17:00 - 23:00
                 alertHour.style.color = `rgb(153,0,102)`;
                 alertHour.innerHTML = 'PM <img src="assets/media/night.svg" style="width: 30px;">';
                 timeOfDay = 'evening';
@@ -202,18 +203,15 @@
         // forEach loop with odd numbers
         ar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-        ar.forEach((i) => {
-            if (i % 2 !== 0) {
-                console.log(i);
-            }
-        })
+        ar.forEach(item => item % 2 !== 0 ? console.log(item) : null);
 
+   
 
         // moving buttons
         const movingButtons = (id, startingTop, startingLeft, speed) => {
             let newTop = startingTop
             let newLeft = startingLeft
-
+            let isMoving = false // Flag to check if the buttons are currently in motion
             let delta = speed
             let delta2 = speed
 
@@ -232,7 +230,6 @@
                     delta2 = -delta2
                 }
             }
-
             setInterval(move, 100);
         }
 
